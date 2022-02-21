@@ -6,7 +6,6 @@ from sklearn.metrics import RocCurveDisplay, confusion_matrix,precision_recall_c
 from scipy.sparse import data
 from sklearn.metrics._plot.precision_recall_curve import PrecisionRecallDisplay
 from sklearn.model_selection import train_test_split
-from sklearn.tree import DecisionTreeClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.ensemble import RandomForestClassifier
@@ -27,23 +26,18 @@ df = pd.read_csv(datacs, sep=',')       # DATA LOAD
 fig = df.hist(figsize=(10, 10))         # DATA HISTOGRAM
 [x.title.set_size(5) for x in fig.ravel()]
 
-
-
-#print(df)
 X = df.drop("round_winner", axis=1)   # DATA DROP round winner
 X_filtered = SelectKBest(chi2, k=10).fit_transform(X, df["round_winner"]) # feature selection, top 10 features
 print(X_filtered)
-y = df['round_winner'] # DATA SADECE QUALITY SINIF
-#print(X)
-#print(y.head(10))                    
-
+y = df['round_winner'] 
+                 
 
 X_train,X_test,y_train,y_test = train_test_split(X,y,test_size=0.2,random_state=40)
 X_filtered_train,X_filtered_test,y_filtered_train,y_filtered_test = train_test_split(X_filtered,y,test_size=0.2,random_state=40)
 
 classifier_RandomForest = RandomForestClassifier()       # CLASSIFIER 
 clf_fit_RandomForest = classifier_RandomForest.fit(X_train, y_train)      # CLASSIFIER'DA FIT
-clf_score_RandomForest = classifier_RandomForest.score(X_test, y_test)     # CLASSIFIER'DA BASARI SCORE
+clf_score_RandomForest = classifier_RandomForest.score(X_test, y_test)     # CLASSIFIER'DA SCORE
 
 classifier_filtered_RandomForest = RandomForestClassifier()       # FEATURE SELECTION 
 clf_filtered_fit_RandomForest = classifier_filtered_RandomForest.fit(X_filtered_train, y_filtered_train) 
@@ -154,7 +148,6 @@ axis[1,0].legend()
 axis[1,1].bar(["RandomForest"],clf_score_RandomForest*100, color="black")
 axis[1,1].bar(["LogisticRegression"],clf_score_LogisticRegression*100, color="green")
 axis[1,1].set_ylabel("Accuracy %")
-
 
 
 plt.show()
